@@ -1,1 +1,1 @@
-# Odoo19HotelAddon Instalaation Guide
+# Odoo19HotelAddon Installation Guide
