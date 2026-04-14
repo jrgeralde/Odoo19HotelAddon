@@ -14,12 +14,14 @@
 
 4.  Update your odoo.conf to include the myaddons folder, Example:
      
-      ; Addon paths (relative)
-     ; addons_path = addons,odoo/addons,mukwebthemeaddon,myaddons
+     ; Addon paths (relative)
 
-5.  Install the hotel Application and exit.
 
-6.   Open your postgresql database in PGADMIN and Using the storedprocs folder, run the following scripts (in sequence) using the PGADMIN query tool.
+     addons_path = addons,odoo/addons,mukwebthemeaddon,myaddons
+
+6.  Install the hotel Application and exit.
+
+7.   Open your postgresql database in PGADMIN and Using the storedprocs folder, run the following scripts (in sequence) using the PGADMIN query tool.
 
                Inserthoteldocuments.sql
                createindexforRegistrationconflict.sql
@@ -29,18 +31,18 @@
                hotel_fnCheck_RegistrationConflict.sql
                create_hotel_transaction_report_view.sql
 
-7.  Run the Hotel Application and add sample records for:
+8.  Run the Hotel Application and add sample records for:
 
            charges (ROOM CHARGE, CASH,VISA, MEALS, LAUNDRY, PATRONAGE DISCOUNT, PWD DISCOUNT)
            roomtypes (with daily charges) (SINGLE, DOUBLE, TWIN, MATRIMONIAL)
            rooms
            guests
 
-8.  Test  the Hotel registration (create, reserve, checkin, checkout cancel)
+9.  Test  the Hotel registration (create, reserve, checkin, checkout cancel)
 
-9.  Test adding of charges and payments for check in guests
+10.  Test adding of charges and payments for check in guests
 
-10.  Test the reports, guest bills and email sending.
+11.  Test the reports, guest bills and email sending.
 
 
 
