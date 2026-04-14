@@ -1,4 +1,4 @@
-# Odoo 19 Hotel Add Installation Guide
+# Odoo 19 Hotel Addon Installation Guide
 
 1. Requirements:
      Ubuntu 22
