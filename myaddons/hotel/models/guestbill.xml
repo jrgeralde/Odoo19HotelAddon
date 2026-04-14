@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_guestbill">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="Title" t-value="'GUEST BILL'"/>
+                        <t t-set="company" t-value="o.company_id or env.company"/>
+                        <t t-set="lines_per_page" t-value="25"/>
+                        <t t-set="all_lines" t-value="o.roombill_ids"/>
+                        <t t-set="line_count" t-value="len(all_lines)"/>
+                        <t t-set="page_count" t-value="(line_count + lines_per_page - 1) // lines_per_page if line_count else 1"/>
+
+                        <t t-foreach="range(page_count)" t-as="pg">
+                            <t t-set="start" t-value="pg * lines_per_page"/>
+                            <t t-set="page_lines" t-value="all_lines[start : start + lines_per_page]"/>
+                            <t t-set="ptotal_debit"   t-value="sum(line.debitamt  for line in page_lines)"/>
+                            <t t-set="ptotal_credit"  t-value="sum(line.creditamt for line in page_lines)"/>
+                            <t t-set="ptotal_balance" t-value="sum(line.diffamt   for line in page_lines)"/>
+                            <t t-set="running_balance" t-value="sum(line.diffamt for line in all_lines[:start + len(page_lines)])"/>
+
+                            <div class="page">
+                                <t t-call="hotel.custom_header"/>
+                                <t t-set="custom_info_block">
+                                    <div class="row"> <div t-if="o.grc_id" class="col-2">
+                                            <strong class="mylbl-10">GRC #</strong>
+                                            <div class="mylbl-12" t-field="o.grc_id"/>
+                                        </div>
+                                        <div t-if="o.guest_id" class="col-3">
+                                            <strong class="mylbl-10">Guest Name</strong>
+                                            <div class="mylbl-12" t-field="o.guest_id"/>
+                                        </div>
+                                        <div t-if="o.room_id" class="col-2">
+                                            <strong class="mylbl-10">Room No.</strong>
+                                            <div class="mylbl-12" t-field="o.room_id"/>
+                                        </div>
+                                        <div t-if="o.roomtname" class="col-2">
+                                            <strong class="mylbl-10">Room Type</strong>
+                                            <div class="mylbl-12" t-field="o.roomtname"/>
+                                        </div>
+                                        <div t-if="o.create_date_ampm" class="col-3 text-start">
+                                            <strong class="mylbl-10">Date</strong>
+                                            <div class="mylbl-12" t-field="o.create_date_ampm"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-out="custom_info_block"/>
+
+                                <table class="table table-borderless mymp0-0" style="width:100%; table-layout: fixed; border-collapse: collapse;">
+                                    <thead class="mydblline">
+                                        <th class="text-center mymp0-0 mytbw-40 mylbl-10"> <strong>LN#</strong></th>
+                                        <th class="text-center mymp0-0 mytbw-90 mylbl-10"> <strong>Date</strong></th>
+                                        <th class="text-end mymp0-0 mytbw-40 mylbl-10"> <strong>Doc</strong></th>
+                                        <th class="text-center mymp0-0 mytbw-60 mylbl-10"><strong>No.</strong></th>
+                                        <th class="text-start mymp0-0 mytbw-210 mylbl-10"><strong>Account Title</strong></th>
+                                        <th class="text-center mymp0-0 mytbw-125 mylbl-10"><strong>Amount</strong></th>
+                                        <th class="text-start mymp0-0 mytbw-70 mylbl-10"><strong>Status</strong></th>
+                                        <th class="text-start mymp0-0 mytbw-85 mylbl-10"><strong>Debit</strong></th>
+                                        <th class="text-end mymp0-0 mytbw-85 mylbl-10"><strong>Credit</strong></th>
+                                        <th class="text-end mymp0-0 mytbw-85 mylbl-10"><strong>Balance</strong></th>
+                                    </thead>
+
+                                    <tbody>
+                                        <t t-foreach="page_lines" t-as="line">
+                                            <tr style="height:15px !important;">
+                                                <td class="text-center mymp0-0 mytbw-40 mylbl-10"><t t-esc="start + line_index + 1"/></td>
+                                                <td class="text-center mymp0-0 mytbw-90 mylbl-10"><span t-field="line.dateapplied_fmt"/></td>
+                                                <td class="text-start mymp0-0 mytbw-40 mylbl-10"><span t-field="line.document_id"/></td>
+                                                <td class="text-center mymp0-0 mytbw-60 mylbl-10"><span t-field="line.documentno"/></td>
+                                                <td class="text-start mymp0-0 mytbw-210 mylbl-10"><span t-field="line.charge_id"/></td>
+                                                <td class="text-center mymp0-0 mytbw-125 mylbl-10"><span t-field="line.amountapplied"/></td>
+                                                <td class="text-start mymp0-0 mytbw-70 mylbl-10"><span t-field="line.state"/></td>
+                                                <td class="text-end mymp0-0 mytbw-85 mylbl-10"><span t-field="line.debitamt"/></td>
+                                                <td class="text-end mymp0-0 mytbw-85 mylbl-10"><span t-field="line.creditamt"/></td>
+                                                <td class="text-end mymp0-0 mytbw-85 mylbl-10"><span t-field="line.diffamt_fmt"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr class="mydblline">
+                                            <td colspan="7" class="text-end mymp0-0 mylbl-10"><strong>Page Total</strong></td>
+                                            <td class="text-end mymp0-0 mytbw-85 mylbl-10"><strong><t t-esc="'{:,.2f}'.format(ptotal_debit)"/></strong></td>
+                                            <td class="text-end mymp0-0 mytbw-85 mylbl-10"><strong><t t-esc="'{:,.2f}'.format(ptotal_credit)"/></strong></td>
+                                            <td class="text-end mymp0-0 mytbw-85 mylbl-10"><strong><t t-esc="'({:,.2f})'.format(abs(ptotal_balance)) if ptotal_balance &lt; 0 else '{:,.2f}'.format(ptotal_balance)"/></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="9" class="text-end mymp0-0 mylbl-10"><strong>Running Balance</strong></td>
+                                            <td class="text-end mymp0-0 mytbw-85 mylbl-10"><strong><t t-esc="'({:,.2f})'.format(abs(running_balance)) if running_balance &lt; 0 else '{:,.2f}'.format(running_balance)"/></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>    
+            </t>
+        </template>     
+
+        <record id="action_report_bill" model="ir.actions.report">
+            <field name="name">Guest Bill</field>
+            <field name="model">hotel.guestregistration</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hotel.report_guestbill</field>
+            <field name="report_file">hotel.report_guestbill</field>
+            <field name="print_report_name">'GRC%06d' % object.grc_id</field>
+            <field name="binding_model_id" ref="model_hotel_guestregistration"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="hotel.mypaperformat_a4_portrait"/>     
+        </record>   
+    </data>    
+</odoo>

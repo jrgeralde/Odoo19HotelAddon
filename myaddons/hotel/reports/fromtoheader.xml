@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="fromto_header">
+            <div style="margin-top: 32px;">
+            
+                <div class="row" style="display: flex; align-items: center; width: 100%;">
+                    <div t-if="o.datefrom_fmt" style="flex: 0 0 25%; max-width: 25%;">
+                        <strong class="mylbl-10">Date From:</strong>
+                        <span class="mylbl-12" t-field="o.datefrom_fmt"/>
+                    </div>
+                    <div t-if="o.dateto_fmt" style="flex: 0 0 25%; max-width: 25%;">
+                        <strong class="mylbl-10">Date To:</strong>
+                        <span class="mylbl-12" t-field="o.dateto_fmt"/>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </template>
+    </data>
+</odoo>
