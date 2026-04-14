@@ -19,7 +19,7 @@
 
 5.  Install the hotel Application and exit.
 
-6.   Using the storedprocs folder, run the following scripts (in sequence) using PGADMIN4
+6.   Open your postgresql database in PGADMIN and Using the storedprocs folder, run the following scripts (in sequence) using the PGADMIN query tool.
 
                Inserthoteldocuments.sql
                createindexforRegistrationconflict.sql
